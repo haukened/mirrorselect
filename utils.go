@@ -96,3 +96,19 @@ func getGeoIP() (*geoIP, error) {
 	llog.Debugf("GeoIP data: %+v", geo)
 	return &geo, nil
 }
+
+func humanizeTransferSpeed(bytes int64, seconds float64) string {
+	bits := bytes * 8
+	if seconds == 0 {
+		return "0 b/s"
+	}
+	speed := float64(bits) / seconds
+	units := []string{"b/s", "Kbps", "Mbps", "Gbps", "Tbps"}
+	for _, unit := range units {
+		if speed < 1024 {
+			return fmt.Sprintf("%4.2f %s", speed, unit)
+		}
+		speed /= 1024
+	}
+	return fmt.Sprintf("%.2f %s", speed, "Tbps")
+}

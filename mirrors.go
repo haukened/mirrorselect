@@ -6,6 +6,7 @@ import (
 	"mirrorselect/internal/llog"
 	"net/http"
 	"net/url"
+	"sort"
 	"strings"
 	"time"
 )
@@ -15,8 +16,8 @@ const BASE_URL = "http://mirrors.ubuntu.com/%s.txt"
 type Mirror struct {
 	URL     *url.URL
 	Latency int64
-	Size    float64
-	Time    int64
+	Size    int64
+	Time    float64
 	Valid   bool
 }
 
@@ -29,11 +30,35 @@ func NewMirror(target string) (Mirror, bool) {
 	return Mirror{URL: parsed}, true
 }
 
+type ByLatency []Mirror
+
+func (m ByLatency) Len() int           { return len(m) }
+func (m ByLatency) Less(i, j int) bool { return m[i].Latency < m[j].Latency }
+func (m ByLatency) Swap(i, j int)      { m[i], m[j] = m[j], m[i] }
+
+type ByTransferSpeed []Mirror
+
+func (m ByTransferSpeed) Len() int           { return len(m) }
+func (m ByTransferSpeed) Less(i, j int) bool { return m[i].bps() > m[j].bps() }
+func (m ByTransferSpeed) Swap(i, j int)      { m[i], m[j] = m[j], m[i] }
+
+func TopNByLatency(mirrors []Mirror, n int) []Mirror {
+	sort.Sort(ByLatency(mirrors))
+	if n > len(mirrors) {
+		n = len(mirrors)
+	}
+	return mirrors[:n]
+}
+
+func (m Mirror) bps() float64 {
+	return float64(m.Size) / m.Time
+}
+
 // TestLatency tests the latency of a mirror by sending a HEAD request to the
 // mirror's /dists/<dist>/Release file. It sets the mirror's Latency field to
 // the time taken to receive a response in milliseconds.
 // It also validates that the mirror has the correct release (noble, focal, etc.)
-func (m *Mirror) TestLatency(timeout int64, dist string) {
+func (m *Mirror) TestLatency(timeout int, dist string) {
 	if m.URL.String() == "" {
 		m.Valid = false
 		llog.Errorf("empty URL for mirror %v", m)
@@ -58,20 +83,37 @@ func (m *Mirror) TestLatency(timeout int64, dist string) {
 	llog.Debugf("%3d ms %s", m.Latency, m.URL.Hostname())
 }
 
-func (m *Mirror) TestDownload() {
+func (m *Mirror) TestDownload(dist string) {
+	client := http.Client{Timeout: 2 * time.Second}
+	target := fmt.Sprintf("%sdists/%s/Release", m.URL.String(), dist)
 	start := time.Now()
-	resp, err := http.Get(m.URL.String())
+	resp, err := client.Get(target)
 	if err != nil {
-		llog.Errorf("%s failed: %s", m.URL.String(), err)
+		llog.Errorf("%s failed: %s", target, err)
 		m.Valid = false
 		return
 	}
 	defer resp.Body.Close()
-	elapsed := time.Since(start)
-	m.Size = float64(resp.ContentLength) / 1024 / 1024
-	m.Time = elapsed.Milliseconds()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		llog.Errorf("failed to read response body: %s", err)
+		m.Valid = false
+		return
+	}
+	m.Time = time.Since(start).Seconds()
+	m.Size = int64(len(body))
 	m.Valid = true
-	llog.Debugf("%3d ms %s", m.Time, m.URL.Hostname())
+	llog.Debugf("%s %s", humanizeTransferSpeed(m.Size, m.Time), m.URL.Hostname())
+}
+
+func filterInvalidMirrors(mirrors []Mirror) []Mirror {
+	var valid []Mirror
+	for _, mirror := range mirrors {
+		if mirror.Valid {
+			valid = append(valid, mirror)
+		}
+	}
+	return valid
 }
 
 func filterMirrors(mirrors []Mirror, proto string) []Mirror {

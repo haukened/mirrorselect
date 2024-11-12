@@ -6,10 +6,13 @@ import (
 	"mirrorselect/internal/llog"
 	"os"
 	"runtime"
+	"sort"
 	"strings"
 
 	"github.com/urfave/cli/v2"
 )
+
+var FinalMirrors []Mirror
 
 func main() {
 	app := &cli.App{
@@ -80,7 +83,7 @@ func main() {
 				DefaultText: "The current system release",
 				Category:    "System Options",
 			},
-			&cli.Int64Flag{
+			&cli.IntFlag{
 				Name:        "timeout",
 				Aliases:     []string{"t"},
 				Usage:       "Timeout for testing mirrors in milliseconds",
@@ -117,7 +120,13 @@ func main() {
 // usefull for cleanup or finalization tasks
 // after runs even if the main action or before action fails
 func after(c *cli.Context) error {
-	fmt.Println("After")
+	if len(FinalMirrors) == 0 {
+		llog.Info("Flag options resulted in no mirrors being selected")
+	} else {
+		for i, mirror := range FinalMirrors {
+			fmt.Printf("%d. %s %s\n", i+1, humanizeTransferSpeed(mirror.Size, mirror.Time), mirror.URL)
+		}
+	}
 	return nil
 }
 
@@ -162,10 +171,33 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+
+	// test the mirrors for latency
 	llog.Infof("Testing %d mirrors", len(mirrors))
-	timeout := c.Int64("timeout")
-	for _, mirror := range mirrors {
+	timeout := c.Int("timeout")
+	for idx := range len(mirrors) {
+		// grab the pointer to the mirror so it can self-update
+		mirror := &mirrors[idx]
+		// test the latency and validity of the mirror
 		mirror.TestLatency(timeout, c.String("release"))
 	}
+
+	// filter out the invalid mirrors
+	mirrors = filterInvalidMirrors(mirrors)
+
+	// get the top N mirrors
+	mirrors = TopNByLatency(mirrors, c.Int("max"))
+
+	// then test the mirrors for download speed
+	for idx := range len(mirrors) {
+		// grab the pointer to the mirror so it can self-update
+		mirror := &mirrors[idx]
+		// test the download speed of the mirror
+		mirror.TestDownload(c.String("release"))
+	}
+
+	sort.Sort(ByTransferSpeed(mirrors))
+	FinalMirrors = mirrors
+
 	return nil
 }

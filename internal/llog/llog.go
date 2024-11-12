@@ -15,11 +15,11 @@ const (
 )
 
 var (
-	debugLogger = log.New(os.Stdout, "DEBUG ", log.LstdFlags|log.Lmsgprefix)
-	infoLogger  = log.New(os.Stdout, "INFO  ", log.LstdFlags|log.Lmsgprefix)
-	warnLogger  = log.New(os.Stdout, "WARN  ", log.LstdFlags|log.Lmsgprefix)
+	debugLogger = log.New(os.Stderr, "DEBUG ", log.LstdFlags|log.Lmsgprefix)
+	infoLogger  = log.New(os.Stderr, "INFO  ", log.LstdFlags|log.Lmsgprefix)
+	warnLogger  = log.New(os.Stderr, "WARN  ", log.LstdFlags|log.Lmsgprefix)
 	errorLogger = log.New(os.Stderr, "ERROR ", log.LstdFlags|log.Lmsgprefix)
-	logLevel    = LevelInfo
+	logLevel    = LevelWarn
 )
 
 func SetLogLevel(level string) error {
