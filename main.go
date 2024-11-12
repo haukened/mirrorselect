@@ -66,11 +66,27 @@ func main() {
 				Category:    "Mirror Options",
 			},
 			&cli.StringFlag{
+				Name:        "protocol",
+				Aliases:     []string{"p"},
+				Usage:       "Protocol to select mirrors for (http, https, any)",
+				Value:       "any",
+				DefaultText: "any",
+				Category:    "Mirror Options",
+			},
+			&cli.StringFlag{
 				Name:        "release",
 				Aliases:     []string{"r"},
 				Usage:       "Release to select mirrors for",
 				DefaultText: "The current system release",
 				Category:    "System Options",
+			},
+			&cli.Int64Flag{
+				Name:        "timeout",
+				Aliases:     []string{"t"},
+				Usage:       "Timeout for testing mirrors in milliseconds",
+				Value:       500,
+				DefaultText: "500",
+				Category:    "Mirror Options",
 			},
 			&cli.StringFlag{
 				Name:        "verbosity",
@@ -133,6 +149,7 @@ func before(c *cli.Context) error {
 		}
 		llog.Infof("Using public IP address %s", geo.IP)
 		llog.Infof("Detected country %s (%s)", geo.CountryName, geo.CountryCode)
+		c.Set("country", geo.CountryCode)
 	}
 	return nil
 }
@@ -140,6 +157,15 @@ func before(c *cli.Context) error {
 // run is the main action that is executed when the application is run
 // context is available to the function and can be used to access the flags
 func run(c *cli.Context) error {
-	fmt.Println("Present")
+	// get the mirrors
+	mirrors, err := getMirrors(c.String("country"), c.String("protocol"))
+	if err != nil {
+		return err
+	}
+	llog.Infof("Testing %d mirrors", len(mirrors))
+	timeout := c.Int64("timeout")
+	for _, mirror := range mirrors {
+		mirror.TestLatency(timeout, c.String("release"))
+	}
 	return nil
 }
