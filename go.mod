@@ -1,6 +1,6 @@
 module github.com/haukened/mirrorselect
 
-go 1.23.3
+go 1.23
 
 require github.com/urfave/cli/v2 v2.27.5
 
