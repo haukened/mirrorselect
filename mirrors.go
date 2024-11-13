@@ -11,8 +11,6 @@ import (
 	"time"
 )
 
-const LUNACHPAD = "https://launchpad.net/ubuntu/+archivemirrors"
-
 type Mirror struct {
 	URL     *url.URL
 	Country string
@@ -132,6 +130,10 @@ func filterMirrors(mirrors []Mirror, proto string) []Mirror {
 }
 
 func getMirrors(country string, proto string, arch string) ([]Mirror, error) {
-
-	return []Mirror{}, nil
+	initial, err := crawlLaunchpad(country)
+	if err != nil {
+		return initial, err
+	}
+	filtered := filterMirrors(initial, proto)
+	return filtered, nil
 }

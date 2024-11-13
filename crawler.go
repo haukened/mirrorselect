@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
+	"mirrorselect/internal/llog"
 	"strings"
 
 	"github.com/biter777/countries"
 	"github.com/gocolly/colly"
 )
 
-var currentCountry string
+var currentCC string
 
-func crawlLaunchpad() (mirrors []Mirror, err error) {
+func crawlLaunchpad(desiredCC string) (mirrors []Mirror, err error) {
 	c := colly.NewCollector(
 		colly.AllowedDomains("launchpad.net"), // only visit launchpad.net
 		colly.MaxDepth(1),                     // only scrape the first page, dont recurse
@@ -22,14 +23,24 @@ func crawlLaunchpad() (mirrors []Mirror, err error) {
 		h.ForEach("tr", func(_ int, row *colly.HTMLElement) {
 			row.ForEach("*", func(_ int, cell *colly.HTMLElement) {
 				if cell.Attr("colspan") == "2" {
-					switch strings.TrimSpace(cell.Text) {
+					cName := strings.TrimSpace(cell.Text)
+					switch cName {
 					case "":
 						return
 					case "Total":
 						return
 					default:
-						country := countries.ByName(cell.Text)
-						fmt.Printf("Country: %s (%s)\n", cell.Text, country.Alpha2())
+						country := parseCountry(cName)
+						currentCC = country.Alpha2()
+						llog.Debugf("Updated country to %s (%s)", country.Info().Name, country.Alpha2())
+					}
+				} else if cell.Attr("href") != "" {
+					link := cell.Attr("href")
+					if strings.HasPrefix(link, "http") && currentCC == desiredCC {
+						mirror, ok := NewMirror(link)
+						if ok {
+							mirrors = append(mirrors, mirror)
+						}
 					}
 				}
 			})
@@ -40,4 +51,12 @@ func crawlLaunchpad() (mirrors []Mirror, err error) {
 	})
 	err = c.Visit("https://launchpad.net/ubuntu/+archivemirrors")
 	return
+}
+
+func parseCountry(c string) countries.CountryCode {
+	cS := strings.Split(c, ",")
+	if len(cS) == 0 {
+		return countries.Unknown
+	}
+	return countries.ByName(cS[0])
 }
