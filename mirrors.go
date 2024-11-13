@@ -11,13 +11,15 @@ import (
 	"time"
 )
 
-const BASE_URL = "http://mirrors.ubuntu.com/%s.txt"
+const LUNACHPAD = "https://launchpad.net/ubuntu/+archivemirrors"
 
 type Mirror struct {
 	URL     *url.URL
+	Country string
 	Latency int64
 	Size    int64
 	Time    float64
+	Ports   bool
 	Valid   bool
 }
 
@@ -129,38 +131,7 @@ func filterMirrors(mirrors []Mirror, proto string) []Mirror {
 	return filtered
 }
 
-func getMirrors(country string, proto string) ([]Mirror, error) {
-	llog.Debugf("Getting mirrors for country %s with protocol %s", country, proto)
+func getMirrors(country string, proto string, arch string) ([]Mirror, error) {
 
-	llog.Debugf("Fetching mirrors from %s", fmt.Sprintf(BASE_URL, country))
-	resp, err := http.Get(fmt.Sprintf(BASE_URL, country))
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	llog.Debugf("Response status: %s", resp.Status)
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("failed to fetch mirrors: %s", resp.Status)
-	}
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	var mirrors []Mirror
-	urls := strings.Split(string(body), "\n")
-	for _, url := range urls {
-		if url == "" {
-			continue
-		}
-		mirror, ok := NewMirror(url)
-		if !ok {
-			continue
-		}
-		mirrors = append(mirrors, mirror)
-	}
-
-	return filterMirrors(mirrors, strings.ToLower(proto)), nil
+	return []Mirror{}, nil
 }

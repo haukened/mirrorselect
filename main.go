@@ -30,7 +30,7 @@ func main() {
 			&cli.StringFlag{
 				Name:        "arch",
 				Aliases:     []string{"a"},
-				Usage:       "Architecture to select mirrors for (amd64, arm64, armhf, ppc64el, riscv64, s390x)",
+				Usage:       "Architecture to select mirrors for (amd64, i386, arm64, armhf, ppc64el, riscv64, s390x)",
 				Value:       runtime.GOARCH,
 				DefaultText: runtime.GOARCH,
 				Category:    "System Options",
@@ -166,11 +166,16 @@ func before(c *cli.Context) error {
 // run is the main action that is executed when the application is run
 // context is available to the function and can be used to access the flags
 func run(c *cli.Context) error {
+	llog.Info("crawling launchpad")
+	mirrors, _ := crawlLaunchpad()
+	fmt.Printf("%v\n", mirrors)
+	return nil
+
 	// get the mirrors
-	mirrors, err := getMirrors(c.String("country"), c.String("protocol"))
-	if err != nil {
-		return err
-	}
+	//mirrors, err := getMirrors(c.String("country"), c.String("protocol"), c.String("arch"))
+	//if err != nil {
+	//	return err
+	//}
 
 	// test the mirrors for latency
 	llog.Infof("Testing %d mirrors", len(mirrors))
