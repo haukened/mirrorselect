@@ -1,4 +1,8 @@
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/haukened/mirrorselect/dev.yml?branch=main&link=https%3A%2F%2Fgithub.com%2Fhaukened%2Fmirrorselect%2Factions) ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/haukened/mirrorselect?link=https%3A%2F%2Fgithub.com%2Fhaukened%2Fmirrorselect%2Fissues) ![GitHub License](https://img.shields.io/github/license/haukened/mirrorselect?link=https%3A%2F%2Fgithub.com%2Fhaukened%2Fmirrorselect%2Fblob%2Fmain%2FLICENSE) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/haukened/mirrorselect?link=https%3A%2F%2Fgo.dev%2Fdl%2F) ![GitHub Release](https://img.shields.io/github/v/release/haukened/mirrorselect?link=https%3A%2F%2Fgithub.com%2Fhaukened%2Fmirrorselect%2Freleases)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/haukened/mirrorselect/dev.yml) ](https://github.com/haukened/mirrorselect/actions)
+[![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/haukened/mirrorselect)](https://github.com/haukened/mirrorselect/issues)
+[![GitHub License](https://img.shields.io/github/license/haukened/mirrorselect)](https://github.com/haukened/mirrorselect/blob/main/LICENSE)
+[![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/haukened/mirrorselect)](https://go.dev/dl/)
+[![GitHub Release](https://img.shields.io/github/v/release/haukened/mirrorselect)](https://github.com/haukened/mirrorselect/releases)
 
 # MirrorSelect
 
