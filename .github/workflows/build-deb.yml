@@ -1,0 +1,65 @@
+name: build
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+env:
+  APP_NAME: 'mirrorselect'
+  DESC: 'Mirrorselect is a tool to help you select the fastest mirror for your system.'
+  GO_VERSION: '1.23'
+  MAINTAINER: 'haukened'
+
+jobs:
+  build-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Build
+        run: go build -v ./... -o ${{ env.APP_NAME }}
+
+      - name: Test
+        run: go test -v ./...
+
+      - name: Calculate Binary Size
+        id: binary_size
+        run: |
+          echo "SIZE=$(stat -c %s './${{ env.APP_NAME }}' | numfmt --to=iec-i --suffix=B)" >> "$GITHUB_OUTPUT"   
+
+      - name: create deb directories
+        run: |
+          mkdir -p .debpkg/usr/bin
+          cp ${{ env.APP_NAME }} .debpkg/usr/bin/${{ env.APP_NAME }}
+          chmod +x .debpkg/usr/bin/${{ env.APP_NAME }}
+
+      - uses: jiro4989/build-deb-action@v3
+        with:
+          package: mirrorselect
+          package_root: .debpkg
+          maintainer: ${{ env.MAINTAINER }}
+          installed_size: ${{ steps.binary_size.outputs.SIZE }}
+          version: ${{ GITHUB_REF_NAME }}
+          arch: 'amd64'
+          desc: 'Mirrorselect is a tool to help you select the fastest mirror for your system.'
+          homepage: 'https://github.com/haukened/mirrorselect'
+      
+      - uses: actions/upload-artifact@v4
+        name: Upload deb artifact
+        with:
+          name: artifact-deb
+          path: |
+            ./*.deb
+      
+      - uses: actions/upload-artifact@v4
+        name: Upload build artifact
+        with:
+          name: artifact
+          path: |
+            ./${{ env.APP_NAME }}
