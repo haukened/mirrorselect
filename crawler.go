@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"mirrorselect/internal/llog"
 	"strings"
 
@@ -47,7 +46,7 @@ func crawlLaunchpad(desiredCC string) (mirrors []Mirror, err error) {
 		})
 	})
 	c.OnScraped(func(r *colly.Response) {
-		fmt.Println("Finished")
+		llog.Debug("Finished scraping launchpad.net")
 	})
 	err = c.Visit("https://launchpad.net/ubuntu/+archivemirrors")
 	return
