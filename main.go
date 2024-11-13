@@ -173,7 +173,7 @@ func run(c *cli.Context) error {
 	}
 
 	// test the mirrors for latency
-	llog.Infof("Testing TCP latency for %d mirrors", len(mirrors))
+	fmt.Fprintf(os.Stderr, "Testing TCP latency for %d mirrors\n", len(mirrors))
 	timeout := c.Int("timeout")
 	for idx := range len(mirrors) {
 		// grab the pointer to the mirror so it can self-update
@@ -189,7 +189,7 @@ func run(c *cli.Context) error {
 	mirrors = TopNByLatency(mirrors, c.Int("max"))
 
 	// then test the mirrors for download speed
-	llog.Infof("Testing download speed for %d mirrors", len(mirrors))
+	fmt.Fprintf(os.Stderr, "Testing download speed for %d mirrors\n", len(mirrors))
 	for idx := range len(mirrors) {
 		// grab the pointer to the mirror so it can self-update
 		mirror := &mirrors[idx]
