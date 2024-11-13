@@ -31,7 +31,7 @@ jobs:
       - name: Calculate Binary Size
         id: binary_size
         run: |
-          echo "SIZE=$(stat -c %s './${{ env.APP_NAME }}' | numfmt --to=iec-i --suffix=B)" >> "$GITHUB_OUTPUT"   
+          echo "BINARY_SIZE=$(stat -c %s './${{ env.APP_NAME }}' | numfmt --to=iec-i --suffix=B)" >> $GITHUB_ENV
 
       - name: create deb directories
         run: |
@@ -44,8 +44,8 @@ jobs:
           package: mirrorselect
           package_root: .debpkg
           maintainer: ${{ env.MAINTAINER }}
-          installed_size: ${{ steps.binary_size.outputs.SIZE }}
-          version: ${{ GITHUB_REF_NAME }}
+          installed_size: ${{ env.BINARY_SIZE }}
+          version: ${{ github.ref_name }}
           arch: 'amd64'
           desc: 'Mirrorselect is a tool to help you select the fastest mirror for your system.'
           homepage: 'https://github.com/haukened/mirrorselect'
