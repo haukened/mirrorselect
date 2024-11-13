@@ -1,3 +1,5 @@
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/haukened/mirrorselect/dev.yml?branch=main) ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/haukened/mirrorselect) ![GitHub License](https://img.shields.io/github/license/haukened/mirrorselect) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/haukened/mirrorselect) ![GitHub Release](https://img.shields.io/github/v/release/haukened/mirrorselect)
+
 # MirrorSelect
 
 MirrorSelect is a command-line tool designed to help users select the best mirror for downloading packages. It tests the speed of various mirrors and suggests the fastest one for your location. Since the removal of `netselect` from the Ubuntu repositories, may users have been forced to use the mirror protocol.  This protocol, while useful, only test latency/priximity using a one-sided view of the world.  This leads to decent, but sub-optimal mirrors selections.
