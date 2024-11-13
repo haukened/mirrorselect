@@ -131,7 +131,7 @@ func filterMirrors(mirrors []Mirror, proto string) []Mirror {
 	return filtered
 }
 
-func getMirrors(country string, proto string, arch string) ([]Mirror, error) {
+func getMirrors(country string, proto string) ([]Mirror, error) {
 	initial, err := crawlLaunchpad(country)
 	if err != nil {
 		return initial, err

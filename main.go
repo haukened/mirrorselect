@@ -168,7 +168,7 @@ func before(c *cli.Context) error {
 // context is available to the function and can be used to access the flags
 func run(c *cli.Context) error {
 	// get the mirrors
-	mirrors, err := getMirrors(c.String("country"), c.String("protocol"), c.String("arch"))
+	mirrors, err := getMirrors(c.String("country"), c.String("protocol"))
 	if err != nil {
 		return err
 	}
