@@ -85,6 +85,7 @@ func (m *Mirror) TestLatency(timeout int, dist string) {
 
 func (m *Mirror) TestDownload(dist string) {
 	client := http.Client{Timeout: 2 * time.Second}
+	// the Release file is guaranteed to be there regardless of release, or arch
 	target := fmt.Sprintf("%sdists/%s/Release", m.URL.String(), dist)
 	start := time.Now()
 	resp, err := client.Get(target)
