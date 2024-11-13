@@ -3,12 +3,13 @@ package main
 import (
 	"fmt"
 	"io"
-	"mirrorselect/internal/llog"
 	"net/http"
 	"net/url"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/haukened/mirrorselect/internal/llog"
 )
 
 type Mirror struct {

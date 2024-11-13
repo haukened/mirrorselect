@@ -3,11 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
-	"mirrorselect/internal/llog"
 	"os"
 	"runtime"
 	"sort"
 	"strings"
+
+	"github.com/haukened/mirrorselect/internal/llog"
 
 	"github.com/urfave/cli/v2"
 )

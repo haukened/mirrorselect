@@ -1,4 +1,4 @@
-module mirrorselect
+module github.com/haukened/mirrorselect
 
 go 1.23.3
 

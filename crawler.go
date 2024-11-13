@@ -1,8 +1,9 @@
 package main
 
 import (
-	"mirrorselect/internal/llog"
 	"strings"
+
+	"github.com/haukened/mirrorselect/internal/llog"
 
 	"github.com/biter777/countries"
 	"github.com/gocolly/colly"

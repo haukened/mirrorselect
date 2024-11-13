@@ -5,10 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"mirrorselect/internal/llog"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/haukened/mirrorselect/internal/llog"
 )
 
 // contains checks if a given string is present in a slice of strings.
