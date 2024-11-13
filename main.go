@@ -95,8 +95,8 @@ func main() {
 				Name:        "verbosity",
 				Aliases:     []string{"v"},
 				Usage:       "Set the log verbosity level (DEBUG, INFO, WARN, ERROR)",
-				Value:       "INFO",
-				DefaultText: "INFO",
+				Value:       "WARN",
+				DefaultText: "WARN",
 				Category:    "System Options",
 				Action: func(c *cli.Context, v string) error {
 					allowedLevels := []string{"DEBUG", "INFO", "WARN", "ERROR"}
