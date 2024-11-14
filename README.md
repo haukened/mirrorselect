@@ -32,13 +32,17 @@ MirrorSelect is a command-line tool designed to help users select the best mirro
 
 To install MirrorSelect, you can choose one of the following options:
 
-1. Installing with go:
+1. Snapcraft.io
+
+    [![Get it from the Snap Store](https://snapcraft.io/en/dark/install.svg)](https://snapcraft.io/mirrorselect)
+
+4. Installing with go:
     
     ```
     go install github.com/haukened/mirrorselect
     ```
 
-2. Compiling from source:
+5. Compiling from source:
 
     ```
     git clone https://github.com/haukened/mirrorselect
