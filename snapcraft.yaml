@@ -4,10 +4,16 @@ description: |
   Mirrorselect is a tool to select the fastest Ubuntu mirrors.
   It tests both TCP latency and HTTP download speed to determine the fastest
   mirrors.  Alternative to netselct and the mirror protocol.
-adopt-info: mirrorselect
+architectures: [amd64,i386]
 base: core24
-grade: stable
 confinement: strict
+contact: david@hauken.us
+donation: https://beer.hauken.us
+grade: stable
+issues: https://github.com/haukened/mirrorselect/issues
+license: GPL-3.0s
+type: app
+website: https://github.com/haukened/mirrorselect
 
 apps:
   mirrorselect:
@@ -21,6 +27,7 @@ parts:
     build-snaps: [go/1.23/stable]
     source: https://github.com/haukened/mirrorselect
     source-type: git
+    source-branch: main
     override-pull: |
       snapcraftctl pull
       snapcraftctl set-version "$(git describe --tags --abbrev=0 --always --match=v*.*.*)"
