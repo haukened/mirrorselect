@@ -4,6 +4,7 @@ description: |
   Mirrorselect is a tool to select the fastest Ubuntu mirrors.
   It tests both TCP latency and HTTP download speed to determine the fastest
   mirrors.  Alternative to netselct and the mirror protocol.
+adopt-info: mirrorselect
 architectures: [amd64]
 base: core24
 confinement: strict
