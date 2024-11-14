@@ -7,7 +7,6 @@ description: |
 adopt-info: mirrorselect
 base: core24
 confinement: strict
-contact: david@hauken.us
 donation: https://beer.hauken.us
 grade: stable
 issues: https://github.com/haukened/mirrorselect/issues
