@@ -26,6 +26,7 @@ go.work.sum
 
 # the application binary
 mirrorselect
+*.snap
 
 #vscode
 .vscode
