@@ -11,7 +11,7 @@ MirrorSelect is a command-line tool designed to help users select the best mirro
 ### MirrorSelect performs a series of actions to ensure you get the best mirrors:
 
 1. Mirrors are sourced from the [Launchpad Mirror List](https://launchpad.net/ubuntu/+archivemirrors) instead of the [Ubuntu Mirrors Service](http://mirrors.ubuntu.com/).
-    1. The Ubuntu Mirrors service does not return the same mirrors every time its accessed, due to the fact its guessing proximity to your GeoIP location and other factors.  This means that the results may be incomplete or different each time its run.
+    1. The Ubuntu Mirrors service does not return the same mirrors every time its accessed, due to the fact it is guessing proximity to your GeoIP location and other factors.  This means that the results may be incomplete or different each time its run.
     1. Launchpad has the most up-to-date and complete information on operational official mirrors.
 1. Every mirror (in the selected country) is tested for TCP latency instead of ICMP
     1. TCP Latency tests the amount of time it takes for the web server to complete the HTTP request.
@@ -85,10 +85,10 @@ Select the fastest HTTPS mirror in the US:
 mirrorselect --protocol https --country US
 ```
 
-Test 5 mirrors with a timeout of 10 seconds:
+Test 5 mirrors with a timeout of 800ms:
 
 ```sh
-mirrorselect --num-mirrors 5 --timeout 10
+mirrorselect --max 5 --timeout 800
 ```
 
 ## Contributing
@@ -101,4 +101,4 @@ This project is licensed under the GNU GPL v3 License. See the [LICENSE](LICENSE
 
 ## Contact
 
-For any questions or suggestions, please open an issue on GitHub or contact the maintainer at your.email@example.com.
+For any questions or suggestions, please open an issue on GitHub.
