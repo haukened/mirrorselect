@@ -39,7 +39,7 @@ To install MirrorSelect, you can choose one of the following options:
 4. Installing with go:
     
     ```
-    go install github.com/haukened/mirrorselect
+    go install github.com/haukened/mirrorselect@latest
     ```
 
 5. Compiling from source:
