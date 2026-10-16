@@ -60,16 +60,8 @@ func getDistribCodename() (string, error) {
 
 type geoIP struct {
 	IP          string `json:"ip"`
-	ASO         string `json:"aso"`
-	ASN         string `json:"asn"`
-	Continent   string `json:"continent"`
 	CountryCode string `json:"cc"`
 	CountryName string `json:"country"`
-	City        string `json:"city"`
-	PostalCode  string `json:"postal"`
-	Latitude    string `json:"latitude"`
-	Longitude   string `json:"longitude"`
-	Timezone    string `json:"tz"`
 }
 
 // getGeoIP fetches the geoIP information from https://ident.me/json and parses it into a geoIP struct
